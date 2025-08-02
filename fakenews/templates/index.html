@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fake and Real News Detector</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <h1>Fake News and Real News Detector</h1>
+    <form id="newsForm">
+        <label for="news">Enter the news:</label><br>
+        <textarea id="text" name="text" rows="4" cols="50"></textarea><br>
+        <input type="submit" value="Submit">
+    </form>
+
+    <div id="prediction" class="prediction">{{prediction}}</div>
+
+    <script>
+        $('#newsForm').submit(function(event) {
+            event.preventDefault(); // Prevent page reload
+
+            const news = $('#text').val();
+
+            $.ajax({
+                url: '/predict',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ text: news }),
+                success: function(response) {
+                    $('#prediction').text(response.prediction);
+                },
+                error: function(xhr, status, error) {
+                    $('#prediction').text('An error occurred: ' + error);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
